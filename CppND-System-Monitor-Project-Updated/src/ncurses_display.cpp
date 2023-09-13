@@ -18,13 +18,17 @@ std::string NCursesDisplay::ProgressBar(float percent) {
   int size{50};
   float bars{percent * size};
 
+  // Fill the space with bars or spaces depending on the percent
   for (int i{0}; i < size; ++i) {
     result += i <= bars ? '|' : ' ';
   }
 
   string display{to_string(percent * 100).substr(0, 4)};
+  // If less than 10% or equal to 100%
   if (percent < 0.1 || percent == 1.0)
     display = " " + to_string(percent * 100).substr(0, 3);
+  
+  // Return the bars and the final percentage out of 100%
   return result + " " + display + "/100%";
 }
 
