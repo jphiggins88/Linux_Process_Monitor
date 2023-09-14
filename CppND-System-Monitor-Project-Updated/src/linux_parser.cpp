@@ -74,7 +74,7 @@ float LinuxParser::MemoryUtilization() {
   int memTotal = 1;
   int memAvailable = 1;
   //float percentUtilized = 0.0f;
-  bool valuesObtained;
+  bool valuesObtained = false;
 
   std::ifstream filestream(kProcDirectory + kMeminfoFilename);
   if (filestream.is_open()) {
@@ -161,18 +161,58 @@ vector<string> LinuxParser::CpuUtilization() {
 
 // TODO: Read and return the total number of processes
 int LinuxParser::TotalProcesses() {
-  
-  
-  
-  return 0;
+  bool valuesObtained = false;
+  int totalProcesses = 0;
+  string line;
+  string key;
+  string value;
+
+  std::ifstream filestream(kProcDirectory + kStatFilename);
+  if (filestream.is_open()) {
+    while (std::getline(filestream, line)) {
+      std::istringstream linestream(line);
+      while (linestream >> key >> value) {
+        if (key == "processes") {
+          totalProcesses = std::stoi(value);
+          valuesObtained = true;
+          break;
+        }
+      }
+      if (valuesObtained == true) {
+        break;
+      }
+    }
+  }
+
+  return totalProcesses;
 }
 
 // TODO: Read and return the number of running processes
 int LinuxParser::RunningProcesses() {
-  
-  
-  
-  return 0;
+  bool valuesObtained = false;
+  int runningProcesses = 0;
+  string line;
+  string key;
+  string value;
+
+  std::ifstream filestream(kProcDirectory + kStatFilename);
+  if (filestream.is_open()) {
+    while (std::getline(filestream, line)) {
+      std::istringstream linestream(line);
+      while (linestream >> key >> value) {
+        if (key == "procs_running") {
+          runningProcesses = std::stoi(value);
+          valuesObtained = true;
+          break;
+        }
+      }
+      if (valuesObtained == true) {
+        break;
+      }
+    }
+  }
+
+  return runningProcesses;
 }
 
 // TODO: Read and return the command associated with a process
