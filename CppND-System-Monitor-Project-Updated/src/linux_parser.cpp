@@ -71,26 +71,32 @@ float LinuxParser::MemoryUtilization() {
   string line;
   string key;
   string value;
-  int memTotal = 0;
-  int memAvailable = 0;
-  float percentUtilized = 0.0;
+  int memTotal = 1;
+  int memAvailable = 1;
+  float percentUtilized = 0.0f;
+  bool valuesObtained;
 
   std::ifstream filestream(kProcDirectory + kMeminfoFilename);
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
       while (linestream >> key >> value) {
-        if (key == "MemTotal") {
-          value = memTotal;
+        if (key == "MemTotal:") {
+          memTotal = std::stoi(value);
         }
-        else if (key == "MemAvailable") {
-          value = memAvailable;
+        else if (key == "MemAvailable:") {
+          memAvailable = std::stoi(value);
+          valuesObtained = true;
+          break;
         }
+      }
+      if (valuesObtained == true) {
+        break;
       }
     }
   }
-  percentUtilized = (memTotal - memAvailable)/memTotal;
-  return percentUtilized;
+  
+  return (float(memTotal - memAvailable) / float(memTotal));
 }
 
 // TODO: Read and return the system uptime
