@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <string>
 #include <vector>
+#include <sstream>
 
 #include "linux_parser.h"
 
@@ -225,7 +226,6 @@ int LinuxParser::RunningProcesses() {
 }
 
 // TODO: Read and return the command associated with a process
-// REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::Command(int pid) {
   
   
@@ -273,7 +273,6 @@ string LinuxParser::Uid(int pid) {
 }
 
 // TODO: Read and return the user associated with a process
-// REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::User(int pid) {
   string uid = Uid(pid);
 
@@ -308,10 +307,70 @@ string LinuxParser::User(int pid) {
 }
 
 // TODO: Read and return the uptime of a process
-// REMOVE: [[maybe_unused]] once you define the function
 long LinuxParser::UpTime(int pid) {
+  // processStartTimeSecs = (processStartTimeTicks / Hertz)
+  long processStartTimeTicks;
+  long clockFrequency = sysconf(_SC_CLK_TCK);
+  long processStartTimeSecs;
+
+  string line;
+  string cpuString;
+
+  //vector<string> processCpuValues = {};
+  std::ifstream stream(kProcDirectory + to_string(pid) + kStatFilename);
+  if (stream.is_open()) {
+    std::getline(stream, line);
+    vector<string> tokens;
+    string token;
+    std::istringstream tokenizer(line);
+
+    while (tokenizer >> token) {
+      tokens.push_back(token);
+    }
+
+    processStartTimeTicks = std::stol(tokens[21]);  // time the process started after system boot
+  }
+  stream.close();
   
-  
-  
-  return 0;
+  // Convert from ticks to seconds.
+  processStartTimeSecs = static_cast<double>(processStartTimeTicks) / static_cast<double>(clockFrequency);
+
+  return processStartTimeSecs;
+
 }
+
+// TODO: Read and return CPU utilization
+vector<string> LinuxParser::CpuUtilization(int pid) {
+  string line;
+  string cpuString;
+
+  vector<string> processCpuValues = {};
+
+  std::ifstream stream(kProcDirectory + to_string(pid) + kStatFilename);
+  if (stream.is_open()) {
+    std::getline(stream, line);
+    vector<string> tokens;
+    string token;
+    std::istringstream tokenizer(line);
+
+    while (tokenizer >> token) {
+      tokens.push_back(token);
+    }
+
+    string utime = tokens[13];  // time proc has been scheduled in user mode (in ticks)
+    string stime = tokens[14];  // time proc has been scheduled in kernel mode (in ticks)
+    string cutime = tokens[15]; // time the proc's children have been scheduled in user mode (in ticks)
+    string cstime = tokens[16]; // time the proc's children have been scheduled in kernel mode (in ticks)
+
+    //string startTime = tokens[21];  // time the process started after system boot (in ticks)
+    string processUpTimeSecs = to_string(UpTime(pid));
+    
+    //processCpuValues = {utime, stime, cutime, cstime, startTime};
+    processCpuValues = {utime, stime, cutime, cstime, processUpTimeSecs};
+  }
+
+  stream.close();
+  return processCpuValues;
+}
+
+

@@ -24,11 +24,11 @@ class Process {
     int pidDir;
 
     int processPid;
-    float processCpuUtilization;
-    std::string processCommand;
-    std::string processRamUtilization;
-    std::string processUser;
-    long int processUpTime;
+    //float processCpuUtilization;
+    //std::string processCommand;
+    //std::string processRamUtilization;
+    //std::string processUser;
+    //long int processUpTime;
 
 
 };
