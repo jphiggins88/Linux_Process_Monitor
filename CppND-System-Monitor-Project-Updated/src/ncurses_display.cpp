@@ -40,6 +40,8 @@ void NCursesDisplay::DisplaySystem(System& system, WINDOW* window) {
   wattron(window, COLOR_PAIR(1));
   mvwprintw(window, row, 10, "");
   wprintw(window, ProgressBar(system.Cpu().Utilization()).c_str());
+  // system.Cpu() returns the _cpu object of the Processor class.
+  // .Utilization() is then called on the _cpu object that was returned.
   wattroff(window, COLOR_PAIR(1));
   mvwprintw(window, ++row, 2, "Memory: ");
   wattron(window, COLOR_PAIR(1));

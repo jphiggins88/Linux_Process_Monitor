@@ -30,8 +30,7 @@ std::string System::Kernel() {
 
 // TODO: Return the system's memory utilization
 float System::MemoryUtilization() {
-    float utilizedMem = LinuxParser::MemoryUtilization();
-    return utilizedMem;
+    return LinuxParser::MemoryUtilization();
 }
 
 // TODO: Return the operating system name
