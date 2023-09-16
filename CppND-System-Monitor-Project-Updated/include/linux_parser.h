@@ -4,8 +4,11 @@
 #include <fstream>
 #include <regex>
 #include <string>
+#include <unistd.h>
 
 namespace LinuxParser {
+const long clockFrequency = sysconf(_SC_CLK_TCK);
+
 // Paths
 const std::string kProcDirectory{"/proc/"};
 const std::string kCmdlineFilename{"/cmdline"};
@@ -52,7 +55,7 @@ std::string Ram(int pid);
 std::string Uid(int pid);
 std::string User(int pid);
 long int UpTime(int pid);
-std::vector<std::string> CpuUtilization(int pid);
+float CpuUtilization(int pid);
 };  // namespace LinuxParser
 
 #endif

@@ -3,6 +3,7 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <iostream>
 
 #include "process.h"
 #include "processor.h"
@@ -27,6 +28,7 @@ vector<Process>& System::Processes() {
         // We can construct the object in-place in the vector. The pid is passed into the constructor.
         processes_.emplace_back(pid);
     }
+
     std::sort(processes_.begin(), processes_.end());
 
     return processes_;

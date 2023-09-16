@@ -25,6 +25,11 @@
                     "description": "Set Disassembly Flavor to Intel",
                     "text": "-gdb-set disassembly-flavor intel",
                     "ignoreFailures": true
+                },
+                {
+                    "description": "Enable Just My Code",
+                    "text": "-enable-pretty-printing false",
+                    "ignoreFailures": true
                 }
             ]
         }
