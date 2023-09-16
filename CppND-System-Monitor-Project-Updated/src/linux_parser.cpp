@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <iomanip>
 
 #include "linux_parser.h"
 
@@ -227,19 +228,51 @@ int LinuxParser::RunningProcesses() {
 
 // TODO: Read and return the command associated with a process
 string LinuxParser::Command(int pid) {
+    //  /proc/[PID]/cmdline
+  string line;
+
+  std::ifstream filestream(kProcDirectory + to_string(pid) + kCmdlineFilename);
+  if (filestream.is_open()) {
+    std::getline(filestream, line);
+    return line;
+  }  
   
-  
-  
-  return string();
+  return "na";
 }
 
 // TODO: Read and return the memory used by a process
 // REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::Ram(int pid) {
-  
-  
-  
-  return string();
+  //  /proc/[PID]/status
+  string line;
+  string key;
+  string value;
+
+  string ram = "na";
+  double ramMb;
+  bool valuesObtained = false;
+
+  std::ifstream filestream(kProcDirectory + to_string(pid) + kStatusFilename);
+  if (filestream.is_open()) {
+    while (std::getline(filestream, line)) {
+      std::istringstream linestream(line);
+      while (linestream >> key >> value) {
+        if (key == "VmSize:") {
+          ram = value;
+          ramMb = std::stod(ram)/1024.0;
+          valuesObtained = true;
+          break;
+        }
+      }
+      if (valuesObtained == true) {
+        break;
+      }
+    }
+  }
+
+  std::ostringstream stream;
+  stream << std::fixed << std::setprecision(2) << ramMb;
+  return stream.str();
 }
 
 // TODO: Read and return the user ID associated with a process
@@ -353,8 +386,11 @@ vector<string> LinuxParser::CpuUtilization(int pid) {
     string token;
     std::istringstream tokenizer(line);
 
-    while (tokenizer >> token) {
+    int i = 0;
+    // No need to read past token 21.
+    while (tokenizer >> token && i < 22) {
       tokens.push_back(token);
+      i++;
     }
 
     string utime = tokens[13];  // time proc has been scheduled in user mode (in ticks)

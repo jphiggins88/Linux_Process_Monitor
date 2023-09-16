@@ -6,7 +6,6 @@
 
 #include "process.h"
 #include "linux_parser.h"
-#include <unistd.h>
 
 using std::string;
 using std::to_string;
@@ -27,7 +26,7 @@ Process::Process(int pid) : pidDir(pid) {
 int Process::Pid() { return this->pidDir; }
 
 // TODO: Return this process's CPU utilization
-float Process::CpuUtilization() {
+float Process::CpuUtilization() const {
     // processTotalUpTimeSeconds = systemUptime - (processStartTimeTicks / Hertz)
     long systemUptime = LinuxParser::UpTime();
     long clockFrequency = sysconf(_SC_CLK_TCK);
@@ -60,5 +59,4 @@ string Process::User() { return LinuxParser::User(this->processPid); }
 long int Process::UpTime() { return LinuxParser::UpTime(this->processPid); }
 
 // TODO: Overload the "less than" comparison operator for Process objects
-// REMOVE: [[maybe_unused]] once you define the function
-bool Process::operator<(Process const& a[[maybe_unused]]) const { return true; }
+bool Process::operator<(Process const& proc2) const { return (this->CpuUtilization() > proc2.CpuUtilization()); }

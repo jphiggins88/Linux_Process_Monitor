@@ -20,20 +20,16 @@ Processor& System::Cpu() {
 
 // TODO: Return a container composed of the system's processes
 vector<Process>& System::Processes() {
-
     // Get all Processes and add to the processes_ vector.
     vector<int> pids = LinuxParser::Pids();
     // Loop through the vector and obtain information about each process.
     for (const auto& pid : pids) {
-        // create a process object (on the stack)
-        //Process proc(pid);
-        //processes_.push_back(proc);
-
         // add the process object to the processes_ vector
         // Using emplace_back allows us to skip creating a temporary object then storing it in the vector.
         // We can construct the object in-place in the vector. The pid is passed into the constructor.
         processes_.emplace_back(pid);
     }
+    std::sort(processes_.begin(), processes_.end());
 
     return processes_;
 }
