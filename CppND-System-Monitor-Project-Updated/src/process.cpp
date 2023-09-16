@@ -19,7 +19,7 @@ Process::Process(int pid) : pidDir(pid) {
     //this->processUpTime = UpTime();
     //this->processCpuUtilization = CpuUtilization();
     //this->processCommand = Command();
-    //this->processRamUtilization = Ram();
+    //this->processRamUtilization = Ram(); 
 }
 
 // TODO: Return this process's ID
