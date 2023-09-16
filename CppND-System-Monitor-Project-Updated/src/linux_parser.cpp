@@ -32,6 +32,8 @@ string LinuxParser::OperatingSystem() {
       }
     }
   }
+  filestream.close();
+
   return value;
 }
 
@@ -45,6 +47,8 @@ string LinuxParser::Kernel() {
     std::istringstream linestream(line);
     linestream >> os >> version >> kernel;
   }
+  stream.close();
+
   return kernel;
 }
 
@@ -97,6 +101,7 @@ float LinuxParser::MemoryUtilization() {
       }
     }
   }
+  filestream.close();
 
   return (float(memTotal - memAvailable) / float(memTotal));
 }
@@ -116,6 +121,7 @@ long LinuxParser::UpTime() {
 
     return upTimeSeconds;
   }
+  filestream.close();
 
   return 0;
 }
@@ -166,6 +172,7 @@ vector<string> LinuxParser::CpuUtilization() {
     std::istringstream linestream(line);
     linestream >> cpuString >> res[0] >> res[1] >> res[2] >> res[3] >> res[4] >> res[5] >> res[6] >> res[7];
   }
+  stream.close();
 
   return res;
 }
@@ -194,6 +201,7 @@ int LinuxParser::TotalProcesses() {
       }
     }
   }
+  filestream.close();
 
   return totalProcesses;
 }
@@ -222,6 +230,7 @@ int LinuxParser::RunningProcesses() {
       }
     }
   }
+  filestream.close();
 
   return runningProcesses;
 }
@@ -235,7 +244,8 @@ string LinuxParser::Command(int pid) {
   if (filestream.is_open()) {
     std::getline(filestream, line);
     return line;
-  }  
+  }
+  filestream.close();
   
   return "na";
 }
@@ -269,6 +279,7 @@ string LinuxParser::Ram(int pid) {
       }
     }
   }
+  filestream.close();
 
   std::ostringstream stream;
   stream << std::fixed << std::setprecision(2) << ramMb;
@@ -301,6 +312,7 @@ string LinuxParser::Uid(int pid) {
       }
     }
   }
+  filestream.close();
 
   return uid;
 }
@@ -335,6 +347,7 @@ string LinuxParser::User(int pid) {
       }
     }
   }
+  filestream.close();
 
   return userOfThisProcess;
 }
@@ -404,8 +417,8 @@ vector<string> LinuxParser::CpuUtilization(int pid) {
     //processCpuValues = {utime, stime, cutime, cstime, startTime};
     processCpuValues = {utime, stime, cutime, cstime, processUpTimeSecs};
   }
-
   stream.close();
+
   return processCpuValues;
 }
 
