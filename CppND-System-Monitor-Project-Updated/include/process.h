@@ -18,16 +18,16 @@ class Process {
    float CpuUtilization() const;
    std::string Ram();
    long int UpTime();
-   //bool operator<(Process const& a) const;
-   bool operator<(Process& a);
+   bool operator<(Process const& a) const;
+   //bool operator<(Process& a);
 
    // getters
-   int getPid();
-   float getProcessCpuUtilization();
-   std::string getProcessCommand();
-   std::string getProcessRamUtilization();
-   std::string getProcessUser();
-   long int getProcessUpTime();
+   int getPid() const;
+   float getProcessCpuUtilization() const;
+   std::string getProcessCommand() const;
+   std::string getProcessRamUtilization() const;
+   std::string getProcessUser() const;
+   long int getProcessUpTime() const;
 
   // TODO: Declare any necessary private members
  private:

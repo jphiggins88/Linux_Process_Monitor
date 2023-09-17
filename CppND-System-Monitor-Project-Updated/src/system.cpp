@@ -21,6 +21,7 @@ Processor& System::Cpu() {
 vector<Process>& System::Processes() {
     // Get all Processes and add to the processes_ vector.
     vector<int> pids = LinuxParser::Pids();
+    processes_.clear();
     // Loop through the vector and obtain information about each process.
     for (const auto& pid : pids) {
         // Modifying how processes are created and stored.

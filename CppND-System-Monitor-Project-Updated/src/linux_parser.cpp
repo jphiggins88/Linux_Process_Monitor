@@ -239,7 +239,8 @@ string LinuxParser::Ram(int pid) {
   filestream.close();
 
   std::ostringstream stream;
-  stream << std::fixed << std::setprecision(2) << ramMb;
+  //stream << std::fixed << std::setprecision(2) << ramMb;
+  stream << std::fixed << std::setprecision(0) << ramMb;
   return stream.str();
 }
 
@@ -357,13 +358,14 @@ float LinuxParser::CpuUtilization(int pid) {
     }
     stream.close();
 
-    long utime = std::stol(tokens[0]);  // time proc has been scheduled in user mode (in ticks)
-    long stime = std::stol(tokens[1]);  // time proc has been scheduled in kernel mode (in ticks)
-    long cutime = std::stol(tokens[2]); // time the proc's children have been scheduled in user mode (in ticks)
-    long cstime = std::stol(tokens[3]); // time the proc's children have been scheduled in kernel mode (in ticks)
+    float utime = std::stof(tokens[0]);  // time proc has been scheduled in user mode (in ticks)
+    float stime = std::stof(tokens[1]);  // time proc has been scheduled in kernel mode (in ticks)
+    float cutime = std::stof(tokens[2]); // time the proc's children have been scheduled in user mode (in ticks)
+    float cstime = std::stof(tokens[3]); // time the proc's children have been scheduled in kernel mode (in ticks)
 
-    // processTotalUpTimeSeconds = systemUptime - (processStartTimeTicks / Hertz)
-    long processUpTimeSecs = UpTime(pid);
+    //processTotalUpTimeSeconds = systemUptime - (processStartTimeTicks / Hertz)
+    //long processUpTimeSecs = UpTime(pid);
+    float processUpTimeSecs = std::stof(tokens[4])/(float)clockFrequency;
     long systemUptime = LinuxParser::UpTime();
     double totalTime = utime + stime + cutime + cstime; // We exclude the child processes' time
     double elapsedTimeSinceProcStart = systemUptime - processUpTimeSecs;

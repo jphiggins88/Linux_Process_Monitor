@@ -35,33 +35,33 @@ string Process::User() { return LinuxParser::User(this->processPid); }
 long int Process::UpTime() { return LinuxParser::UpTime(this->processPid); }
 
 //bool Process::operator<(Process const& proc2) const { return (this->CpuUtilization() > proc2.CpuUtilization()); }
-bool Process::operator<(Process & proc2) {
-    //return ( this->getProcessCpuUtilization() > proc2.getProcessCpuUtilization());
-    return ( this->getProcessRamUtilization() > proc2.getProcessRamUtilization());
+bool Process::operator<(Process const& proc2) const{
+    return ( this->getProcessCpuUtilization() > proc2.getProcessCpuUtilization());
+    //return ( this->getProcessRamUtilization() > proc2.getProcessRamUtilization());
 }
 
 
 // Getters
-int Process::getPid() {
+int Process::getPid() const{
     return this->processPid;
 }
 
-float Process::getProcessCpuUtilization() {
+float Process::getProcessCpuUtilization() const{
     return this->processCpuUtilization;
 }
 
-std::string Process::getProcessCommand() {
+std::string Process::getProcessCommand() const{
     return this->processCommand;
 }
 
-std::string Process::getProcessRamUtilization() {
+std::string Process::getProcessRamUtilization() const{
     return this->processRamUtilization;
 }
 
-std::string Process::getProcessUser() {
+std::string Process::getProcessUser() const{
     return this->processUser;
 }
 
-long int Process::getProcessUpTime() {
+long int Process::getProcessUpTime() const{
     return this->processUpTime;
 }
