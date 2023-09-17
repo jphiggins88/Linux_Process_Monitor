@@ -195,6 +195,7 @@ int LinuxParser::RunningProcesses() {
   return runningProcesses;
 }
 
+// Process Functions
 string LinuxParser::Command(int pid) {
     //  /proc/[PID]/cmdline
   string line;
@@ -307,14 +308,11 @@ string LinuxParser::User(int pid) {
 }
 
 long LinuxParser::UpTime(int pid) {
-  // processStartTimeSecs = (processStartTimeTicks / Hertz)
   long processStartTimeTicks;
   long processStartTimeSecs;
-  //long clockFrequency = sysconf(_SC_CLK_TCK);
 
   string line;
   string cpuString;
-  //vector<string> processCpuValues = {};
   std::ifstream stream(kProcDirectory + to_string(pid) + kStatFilename);
   if (stream.is_open()) {
     std::getline(stream, line);
@@ -334,7 +332,6 @@ long LinuxParser::UpTime(int pid) {
   processStartTimeSecs = static_cast<double>(processStartTimeTicks) / static_cast<double>(clockFrequency);
 
   return processStartTimeSecs;
-
 }
 
 float LinuxParser::CpuUtilization(int pid) {

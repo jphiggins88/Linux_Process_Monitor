@@ -13,6 +13,11 @@ using std::vector;
 
 Process::Process(int pid) : pidDir(pid) {
     this->processPid = Pid();
+    this->processUser = User();
+    this->processUpTime = UpTime();
+    this->processCpuUtilization = CpuUtilization();
+    this->processCommand = Command();
+    this->processRamUtilization = Ram(); 
 }
 
 int Process::Pid() { return this->pidDir; }
@@ -29,4 +34,34 @@ string Process::User() { return LinuxParser::User(this->processPid); }
 
 long int Process::UpTime() { return LinuxParser::UpTime(this->processPid); }
 
-bool Process::operator<(Process const& proc2) const { return (this->CpuUtilization() > proc2.CpuUtilization()); }
+//bool Process::operator<(Process const& proc2) const { return (this->CpuUtilization() > proc2.CpuUtilization()); }
+bool Process::operator<(Process & proc2) {
+    //return ( this->getProcessCpuUtilization() > proc2.getProcessCpuUtilization());
+    return ( this->getProcessRamUtilization() > proc2.getProcessRamUtilization());
+}
+
+
+// Getters
+int Process::getPid() {
+    return this->processPid;
+}
+
+float Process::getProcessCpuUtilization() {
+    return this->processCpuUtilization;
+}
+
+std::string Process::getProcessCommand() {
+    return this->processCommand;
+}
+
+std::string Process::getProcessRamUtilization() {
+    return this->processRamUtilization;
+}
+
+std::string Process::getProcessUser() {
+    return this->processUser;
+}
+
+long int Process::getProcessUpTime() {
+    return this->processUpTime;
+}
