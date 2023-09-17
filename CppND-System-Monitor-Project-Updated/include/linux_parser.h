@@ -21,6 +21,18 @@ const std::string kVersionFilename{"/version"};
 const std::string kOSPath{"/etc/os-release"};
 const std::string kPasswordPath{"/etc/passwd"};
 
+// Keys to search for
+const std::string filterVmRss{"VmRSS:"}; // This was recommended in Udacity code review over VmSize
+const std::string filterVmSize{"VmSize:"}; // Not used. The key above was recommended in code review
+const std::string PrettyName{"PRETTY_NAME"};
+const std::string filterMemTotal{"MemTotal:"};
+const std::string filterMemAvailable{"MemAvailable:"};
+const std::string filterProcesses{"processes"};
+const std::string filterProcs_running{"procs_running"};
+const std::string filterUid{"Uid:"};
+
+const std::string NA{"na"};
+
 // System
 float MemoryUtilization();
 long UpTime();

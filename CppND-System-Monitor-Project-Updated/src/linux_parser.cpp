@@ -25,7 +25,7 @@ string LinuxParser::OperatingSystem() {
       std::replace(line.begin(), line.end(), '"', ' ');
       std::istringstream linestream(line);
       while (linestream >> key >> value) {
-        if (key == "PRETTY_NAME") {
+        if (key == PrettyName) {
           std::replace(value.begin(), value.end(), '_', ' ');
           return value;
         }
@@ -84,10 +84,10 @@ float LinuxParser::MemoryUtilization() {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
       while (linestream >> key >> value) {
-        if (key == "MemTotal:") {
+        if (key == filterMemTotal) {
           memTotal = std::stoi(value);
         }
-        else if (key == "MemAvailable:") {
+        else if (key == filterMemAvailable) {
           memAvailable = std::stoi(value);
           valuesObtained = true;
           break;
@@ -126,7 +126,7 @@ vector<string> LinuxParser::CpuUtilization() {
   string line;
   string cpuString;
 
-  vector<string> cpuData(8, "na");
+  vector<string> cpuData(8, NA);
 
   std::ifstream stream(kProcDirectory + kStatFilename);
   if (stream.is_open()) {
@@ -151,7 +151,7 @@ int LinuxParser::TotalProcesses() {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
       while (linestream >> key >> value) {
-        if (key == "processes") {
+        if (key == filterProcesses) {
           totalProcesses = std::stoi(value);
           valuesObtained = true;
           break;
@@ -179,7 +179,7 @@ int LinuxParser::RunningProcesses() {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
       while (linestream >> key >> value) {
-        if (key == "procs_running") {
+        if (key == filterProcs_running) {
           runningProcesses = std::stoi(value);
           valuesObtained = true;
           break;
@@ -206,16 +206,19 @@ string LinuxParser::Command(int pid) {
   }
   filestream.close();
   
-  return "na";
+  return NA;
 }
 
 string LinuxParser::Ram(int pid) {
+  // This will return the value associeated with the VmRSS key
+  // Originally I used VmSize, but this can excede the physical system RAM.
+  // Instead I use VmRSS to give exact physical memory as recommended in the code review.
   //  /proc/[PID]/status
   string line;
   string key;
   string value;
 
-  string ram = "na";
+  string ram = NA;
   double ramMb;
   bool valuesObtained = false;
 
@@ -224,7 +227,7 @@ string LinuxParser::Ram(int pid) {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
       while (linestream >> key >> value) {
-        if (key == "VmSize:") {
+        if (key == filterVmSize) {
           ram = value;
           ramMb = std::stod(ram)/1024.0;
           valuesObtained = true;
@@ -250,7 +253,7 @@ string LinuxParser::Uid(int pid) {
   string key;
   string value;
 
-  string uid = "na";
+  string uid = NA;
   bool valuesObtained = false;
 
   std::ifstream filestream(kProcDirectory + to_string(pid) + kStatusFilename);
@@ -258,7 +261,7 @@ string LinuxParser::Uid(int pid) {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
       while (linestream >> key >> value) {
-        if (key == "Uid:") {
+        if (key == filterUid) {
           uid = value;
           valuesObtained = true;
           break;
@@ -283,7 +286,7 @@ string LinuxParser::User(int pid) {
   string dummyVal;
   string userId;
 
-  string userOfThisProcess = "na";
+  string userOfThisProcess = NA;
   bool valuesObtained = false;
 
   std::ifstream filestream(kPasswordPath);
@@ -322,7 +325,8 @@ long LinuxParser::UpTime(int pid) {
     std::istringstream tokenizer(line);
 
     while (tokenizer >> token) {
-      tokens.push_back(token);
+      //tokens.push_back(token);
+      tokens.emplace_back(token);
     }
 
     processStartTimeTicks = std::stol(tokens[21]);  // time the process started after system boot
@@ -351,7 +355,8 @@ float LinuxParser::CpuUtilization(int pid) {
       // No need to read past token 21. We only care about 13-16 and 21.
       while (tokenizer >> token && i < 22) {
         if (i == 13 || i == 14 || i == 15 || i == 16 || i == 21) {
-          tokens.push_back(token);
+          //tokens.push_back(token);
+          tokens.emplace_back(token);
         }
         i++;
       }

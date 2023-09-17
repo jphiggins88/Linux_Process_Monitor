@@ -22,21 +22,30 @@ Process::Process(int pid) : pidDir(pid) {
 
 int Process::Pid() { return this->pidDir; }
 
-float Process::CpuUtilization() const {
-    return LinuxParser::CpuUtilization(this->processPid);
-}
+float Process::CpuUtilization() const { return LinuxParser::CpuUtilization(this->processPid); }
 
-string Process::Command() { return LinuxParser::Command(this->processPid); }
+string Process::Command() {
+    //return LinuxParser::Command(this->processPid);
+
+    // Shorten the string to a manageable size before returning
+    return LinuxParser::Command(this->processPid).substr(0, 37) + "...";
+}
 
 string Process::Ram() { return LinuxParser::Ram(this->processPid); }
 
 string Process::User() { return LinuxParser::User(this->processPid); }
 
-long int Process::UpTime() { return LinuxParser::UpTime(this->processPid); }
+long int Process::UpTime() {
+    //return LinuxParser::UpTime(this->processPid);
+    long systemUptime = LinuxParser::UpTime();
+    long processUptime = LinuxParser::UpTime(this->processPid);
+    return systemUptime - processUptime;
+}
 
 //bool Process::operator<(Process const& proc2) const { return (this->CpuUtilization() > proc2.CpuUtilization()); }
 bool Process::operator<(Process const& proc2) const{
     return ( this->getProcessCpuUtilization() > proc2.getProcessCpuUtilization());
+    // Replace with line below to sort by RAM usage.
     //return ( this->getProcessRamUtilization() > proc2.getProcessRamUtilization());
 }
 
