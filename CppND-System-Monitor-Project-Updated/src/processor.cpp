@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <string>
 
-// TODO: Return the aggregate CPU allCpuUsageization
+// Return the aggregate CPU allCpuUsageization
 float Processor::Utilization() {
 
     t0_usage = getCpuUtilization();
@@ -15,19 +15,6 @@ float Processor::Utilization() {
     cpuPercentUtilization = ((float)totalUsage - (float)idleUsage) / (float)totalUsage;
 
     return cpuPercentUtilization;
-
-    /*
-    t0minus_usage = getCpuUtilization();
-    sleep(1);
-    t0_usage = getCurrUtilization();
-
-    long totalUsage = t0_usage[0] - t0minus_usage[0];
-    long idleUsage = t0_usage[1] - t0_usage[1];
-
-    cpuPercentUtilization = ((float)totalUsage - (float)idleUsage) / (float)totalUsage;
-
-    return cpuPercentUtilization;
-    */
 }
 
 std::vector<long> Processor::getCpuUtilization() {

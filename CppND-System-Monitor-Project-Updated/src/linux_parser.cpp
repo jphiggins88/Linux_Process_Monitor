@@ -325,7 +325,6 @@ long LinuxParser::UpTime(int pid) {
     std::istringstream tokenizer(line);
 
     while (tokenizer >> token) {
-      //tokens.push_back(token);
       tokens.emplace_back(token);
     }
 
@@ -368,8 +367,6 @@ float LinuxParser::CpuUtilization(int pid) {
     float cutime = std::stof(tokens[2]); // time the proc's children have been scheduled in user mode (in ticks)
     float cstime = std::stof(tokens[3]); // time the proc's children have been scheduled in kernel mode (in ticks)
 
-    //processTotalUpTimeSeconds = systemUptime - (processStartTimeTicks / Hertz)
-    //long processUpTimeSecs = UpTime(pid);
     float processUpTimeSecs = std::stof(tokens[4])/(float)clockFrequency;
     long systemUptime = LinuxParser::UpTime();
     double totalTime = utime + stime + cutime + cstime; // We exclude the child processes' time

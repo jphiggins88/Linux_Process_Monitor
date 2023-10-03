@@ -30,7 +30,6 @@ vector<Process>& System::Processes() {
         // This should fix the issue of trying to obtain information from that process later by calling the process functions.
         // Previously, if a process existed at t0, it was added to the list.
         // Occasionally the process would be removed, and calling that process's functions at t0+n would result in a segmentation fault or some kind of memmory error.
-
         // add the process object to the processes_ vector
         // Using emplace_back allows us to skip creating a temporary object then storing it in the vector.
         // We can construct the object in-place in the vector. The pid is passed into the constructor.
